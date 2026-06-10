@@ -1,1 +1,1 @@
-# cpp-test-project
+Generates a simple Cmake project that makes things in C++ easy to test and develop before being moved to larger projects and code bases.

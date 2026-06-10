@@ -2,12 +2,20 @@ cmake_minimum_required(VERSION "4.0.0")
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(TESTING_SUITE "clean" CACHE STRING "Game build path")
+
+if(${TESTING_SUITE} STREQUAL "clean")
+    add_compile_definitions(TESTING_SUITE_CLEAN)
+elseif(${TESTING_SUITE} STREQUAL "loop")
+    add_compile_definitions(TESTING_SUITE_LOOP)
+endif()
+
 get_filename_component(PARENT_FOLDER ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 project(${PARENT_FOLDER})
 
 
 set(ROOT "${CMAKE_CURRENT_SOURCE_DIR}/Source")
-file(GLOB_RECURSE SOURCES
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${ROOT}/*.cpp"
     "${ROOT}/*.c"
     "${ROOT}/*.h"
@@ -15,7 +23,7 @@ file(GLOB_RECURSE SOURCES
     "${ROOT}/*.inl"
 )
 
-add_executable(${PARENT_FOLDER} ${ROOT}/main.cpp)
+add_executable(${PARENT_FOLDER} ${SOURCES})
 
 set_target_properties(${PARENT_FOLDER} PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY                "${CMAKE_CURRENT_SOURCE_DIR}/Bin/$<CONFIG>"
@@ -40,3 +48,5 @@ set_target_properties(${PARENT_FOLDER} PROPERTIES
 )
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT "${PARENT_FOLDER}")
+
+source_group(TREE "${ROOT}" FILES ${SOURCES})
